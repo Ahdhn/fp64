@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
 #Project name 
-set(PROJECT_NAME "CUDATemplate")#<TODO> change this to the name of your project 
+set(PROJECT_NAME "fp64")#<TODO> change this to the name of your project 
 project(${PROJECT_NAME} LANGUAGES CXX CUDA)  
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.18)
@@ -37,7 +37,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 #GLOB source files 
-file(GLOB_RECURSE SrcFiles ${CMAKE_SOURCE_DIR}/CUDATemplate/*.*)#<TODO> change this to add your files 
+file(GLOB_RECURSE SrcFiles ${CMAKE_SOURCE_DIR}/fp64/*.*)#<TODO> change this to add your files 
 
 
 #Pass the source files to the executable 
