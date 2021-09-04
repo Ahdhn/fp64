@@ -1,14 +1,91 @@
-# CUDATemplate [![Windows](https://github.com/Ahdhn/CUDATemplate/actions/workflows/Windows.yml/badge.svg)](https://github.com/Ahdhn/CUDATemplate/actions/workflows/Windows.yml) [![Ubuntu](https://github.com/Ahdhn/CUDATemplate/actions/workflows/Ubuntu.yml/badge.svg)](https://github.com/Ahdhn/CUDATemplate/actions/workflows/Ubuntu.yml)
-My template for starting a new CUDA project using CMake on Windows (Visual Studio) or Linux (gcc, clang). The template also includes minimal YAML scripts for CI using Github Actions on both Windows (Visual Studio 2019) and Linux (Ubuntu). 
+# **FP64** [![Windows](https://github.com/Ahdhn/fp64/actions/workflows/Windows.yml/badge.svg)](https://github.com/Ahdhn/fp64/actions/workflows/Windows.yml) [![Ubuntu](https://github.com/Ahdhn/fp64/actions/workflows/Ubuntu.yml/badge.svg)](https://github.com/Ahdhn/fp64/actions/workflows/Ubuntu.yml)
 
+The goal is of this code is to explore the cost of double-precision floating point division on a memory bound computation. The code simply launches a kernel where everything reads a single element for a buffer, adds a constant to it, and then writes it to the buffer. We do this first using different stride (1 up to 32) and then using different offsets (0 up to 32). 
 
 ## Build 
-You might first need to change the project name in the `CMakeLists.txt` and the folder name and fill in any `TODO`. Then simply run 
-
 ```
+git clone https://github.com/Ahdhn/fp64.git
+cd fp64
 mkdir build
 cd build 
 cmake ..
 ```
-
 Depending on the system, this will generate either a `.sln` project on Windows or a `make` file for a Linux system. 
+
+# Results 
+On a GTX 1050 GPU (Pascal architecture - Compute Capability 6.1)
+```
+Device: NVIDIA GeForce GTX 1050
+Transfer size (MB): 32
+Double Precision
+============================== Stride Test ==============================
+Stride  BW (GB/s)      Time (ms)      BW w/div (GB/s)     Time w/div (ms)
+1       88.2768        0.724992       48.6039             1.31677
+2       44.2253        1.44714        44.2136             1.44752
+3       29.7194        2.15347        29.6934             2.15536
+4       22.2183        2.88051        22.2816             2.87232
+5       22.4419        2.85181        22.4992             2.84454
+6       22.2975        2.87027        22.4659             2.84877
+7       21.3675        2.9952         21.9838             2.91123
+8       20.771         3.08122        21.5169             2.9744
+9       19.7285        3.24403        20.1904             3.16982
+10      19.16          3.34029        19.3564             3.3064
+11      18.4529        3.46829        18.5798             3.44461
+12      18.3338        3.49082        18.3878             3.48058
+13      17.4484        3.66797        17.3659             3.68538
+14      16.9193        3.78266        16.8192             3.80518
+15      16.3399        3.9168         16.2803             3.93114
+16      17.463         3.6649         17.5179             3.65341
+17      15.2179        4.20557        15.201              4.21024
+18      14.828         4.31616        14.8644             4.3056
+19      14.532         4.40406        14.5255             4.40605
+20      14.6267        4.37555        14.5654             4.39398
+21      14.2825        4.48102        14.2415             4.49392
+22      13.9384        4.59162        13.855              4.61926
+23      13.4495        4.75853        13.4006             4.7759
+24      13.6255        4.69709        13.4902             4.74419
+25      13.1592        4.86352        13.1055             4.88346
+26      13.1027        4.88448        13.0188             4.91597
+27      12.8946        4.96333        12.787              5.00509
+28      12.5351        5.10566        12.4663             5.13386
+29      12.3141        5.19731        12.1975             5.24698
+30      12.5653        5.09338        12.4959             5.1217
+31      12.3518        5.18144        12.224              5.23558
+32      15.501         4.12877        15.3092             4.18048
+
+============================== Offset Test ==============================
+Stride  BW (GB/s)      Time (ms)      BW w/div (GB/s)     Time w/div (ms)
+0       87.1878        0.734048       60.4047             1.05952
+1       87.7809        0.729088       60.4449             1.05882
+2       87.5925        0.730656       60.3865             1.05984
+3       88.0359        0.726976       60.412              1.05939
+4       88.9047        0.719872       60.4577             1.05859
+5       88.0282        0.72704        59.7229             1.07162
+6       88.0282        0.72704        60.3846             1.05987
+7       88.4017        0.723968       60.3901             1.05978
+8       89.67          0.713728       60.4449             1.05882
+9       88.2768        0.724992       60.4065             1.05949
+10      88.1523        0.726016       60.3919             1.05974
+11      88.0475        0.72688        60.3919             1.05974
+12      89.1583        0.717824       60.3865             1.05984
+13      88.0282        0.72704        60.4449             1.05882
+14      87.8117        0.728832       60.4084             1.05946
+15      87.7809        0.729088       60.4449             1.05882
+16      87.7809        0.729088       60.3865             1.05984
+17      87.535         0.731136       60.3956             1.05968
+18      86.2069        0.7424         60.4065             1.05949
+19      87.6578        0.730112       60.3865             1.05984
+20      88.9047        0.719872       60.4449             1.05882
+21      88.2768        0.724992       60.3865             1.05984
+22      88.1523        0.726016       60.27               1.06189
+23      88.4017        0.723968       60.3865             1.05984
+24      89.5776        0.714464       60.4449             1.05882
+25      88.1523        0.726016       61.5953             1.03904
+26      87.6578        0.730112       61.5347             1.04006
+27      88.2768        0.724992       61.5801             1.0393
+28      89.4134        0.715776       61.6048             1.03888
+29      88.1523        0.726016       61.4628             1.04128
+30      87.9044        0.728064       61.5764             1.03936
+31      88.0282        0.72704        61.5858             1.0392
+32      88.1523        0.726016       61.5479             1.03984
+```
